@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "Vibe Coding Context OS",
+  "scan": {
+    "includeCodexSessions": false,
+    "sessionLookbackDays": 120,
+    "maxFiles": 900,
+    "maxFileBytes": 262144,
+    "include": [],
+    "exclude": ["**/.env*", "**/secrets/**", "**/*secret*"]
+  },
+  "publish": {
+    "blockOnRedactions": true,
+    "blockOnCriticalDrift": true,
+    "requireHumanReviewBeforeApplyingRules": true
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "generatedAt": "<generated-at>",
+  "product": "Vibe Coding Context OS",
+  "workspaceLabel": "demo-workspace",
+  "summary": {
+    "sources": 4,
+    "sessions": 0,
+    "risks": 0,
+    "ruleFiles": 1,
+    "docs": 1,
+    "manifests": 1,
+    "codeFiles": 1
+  },
+  "categories": [
+    {
+      "name": "Context Engineering",
+      "count": 7,
+      "weight": 49
+    },
+    {
+      "name": "AI Coding Tools",
+      "count": 5,
+      "weight": 35
+    },
+    {
+      "name": "Debugging And QA",
+      "count": 2,
+      "weight": 14
+    },
+    {
+      "name": "Docs And Knowledge",
+      "count": 2,
+      "weight": 14
+    },
+    {
+      "name": "Automation",
+      "count": 2,
+      "weight": 14
+    },
+    {
+      "name": "Portfolio And Product",
+      "count": 1,
+      "weight": 8
+    }
+  ],
+  "workflowStages": [
+    {
+      "name": "Capture",
+      "status": "partial",
+      "description": "Collect AI coding sessions and source context into a local inventory."
+    },
+    {
+      "name": "Structure",
+      "status": "strong",
+      "description": "Convert scattered instructions into project rules and spec-ready context."
+    },
+    {
+      "name": "Execute",
+      "status": "partial",
+      "description": "Preserve commands, workflows, and implementation paths that agents can reuse."
+    },
+    {
+      "name": "Verify",
+      "status": "partial",
+      "description": "Keep review, test, and risk checks close to generated AI work."
+    },
+    {
+      "name": "Publish",
+      "status": "partial",
+      "description": "Export clean artifacts for GitHub, documentation, and personal positioning."
+    }
+  ],
+  "drift": {
+    "total": 4,
+    "critical": 0,
+    "warning": 0,
+    "info": 4
+  },
+  "budget": {
+    "totalEstimatedTokens": 840,
+    "warnings": []
+  },
+  "publish": {
+    "status": "review",
+    "blocked": 0,
+    "warnings": 1
+  },
+  "recommendations": [
+    "Lead with Context Engineering. It is the strongest signal in the current context map.",
+    "Keep exports separate from source files; apply generated rules manually after review."
+  ]
+}

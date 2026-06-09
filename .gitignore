@@ -1,0 +1,14 @@
+node_modules
+dist
+dist-server
+exports
+.env
+.DS_Store
+npm-debug.log*
+*.log
+*.err.log
+*.tgz
+.env.local
+.env.*.local
+.playwright-cli
+coverage

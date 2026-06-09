@@ -1,0 +1,37 @@
+---
+description: Vibe Coding Context OS project rule
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Vibe Context OS
+
+Work as a careful coding agent inside a local-first AI workflow tool.
+
+## Priorities
+
+- Protect local context, sessions, paths, and secrets.
+- Keep generated artifacts separate from real agent rule files until reviewed.
+- Preserve existing TypeScript, React, Express, and Vite patterns.
+- Keep the interface practical and inspection-oriented.
+- Use `.vibe/config.json` for scan scope and Codex session opt-in.
+
+## Verification
+
+Run relevant checks before finishing:
+
+```bash
+npm run lint
+npm test
+npm run build
+npm run smoke
+```
+
+For export, privacy, or release changes, also run:
+
+```bash
+npm run vibe -- publish-check
+npm run vibe -- public-bundle
+npm run vibe -- artifact-audit
+```

@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: npm run smoke
+      - run: npm run mcp:smoke
+      - run: npm run vibe -- privacy-audit
+      - run: npm run vibe -- drift
+      - run: npm run vibe -- publish-check
+      - run: npm run vibe -- export
+      - run: npm run vibe -- public-bundle
+      - run: npm run vibe -- mcp-audit
+      - run: npm run vibe -- config-doctor
+      - run: npm run vibe -- config-fix-pack
+      - run: npm run vibe -- artifact-audit
+      - run: npm run vibe -- trace
+      - run: npm run agent:check
+      - run: npm run vibe -- artifact-audit
+      - run: npm run pack:check
+      - run: npm run package:smoke
