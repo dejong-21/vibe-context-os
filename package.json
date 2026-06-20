@@ -41,6 +41,7 @@
     "dist-server/server/analyzer.*",
     "dist-server/server/artifactAudit.*",
     "dist-server/server/applyPlan.*",
+    "dist-server/server/badge.*",
     "dist-server/server/budget.*",
     "dist-server/server/cli.*",
     "dist-server/server/codexSessions.*",

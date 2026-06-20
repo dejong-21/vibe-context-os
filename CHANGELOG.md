@@ -7,8 +7,10 @@ Initial launch-ready beta.
 - Repositioned the project as an Agent Context Doctor for AI coding workflows.
 - Added `vibe-context-os` and `agent-context-doctor` package binary aliases.
 - Changed `doctor` into a quick diagnosis command backed by the shared status report.
+- Added `badge` for README-ready agent-readiness badges.
 - Added reusable GitHub Action metadata in `action.yml` for CI agent-readiness checks.
 - Added `ROADMAP.md` with the community packaging, rules doctor, CI, and ecosystem integration path.
+- Added community research and adoption playbook docs for the 2026-06-20 ecosystem snapshot.
 - Updated English and Chinese README first screens around `npx`, agent-native usage, and GitHub Actions.
 - Local-first scanner for project rules, docs, manifests, code, and optional Codex sessions.
 - Agent-native Codex/Claude skill workflow, helper script, and Claude Code command templates.

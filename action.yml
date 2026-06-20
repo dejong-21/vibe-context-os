@@ -34,6 +34,9 @@ outputs:
   public-bundle:
     description: Path to the generated public bundle directory, when enabled.
     value: ${{ steps.doctor.outputs.public-bundle }}
+  badge-markdown:
+    description: README-ready agent-readiness badge Markdown.
+    value: ${{ steps.doctor.outputs.badge-markdown }}
 
 runs:
   using: composite
@@ -88,8 +91,10 @@ runs:
         trace_code=0
         pack_code=0
         bundle_code=0
+        badge_code=0
 
         run_json status "$report_dir/status.json" || status_code=$?
+        run_json badge "$report_dir/badge.json" || badge_code=$?
         run_json drift "$report_dir/drift.json" || drift_code=$?
         run_json privacy-audit "$report_dir/privacy-audit.json" || privacy_code=$?
         run_json config-doctor "$report_dir/config-doctor.json" || config_code=$?
@@ -106,11 +111,13 @@ runs:
 
         task_pack="$workspace/exports/latest/TASK_PACK.md"
         public_bundle_dir="$workspace/exports/public"
+        badge_markdown="$(node -e "const fs=require('fs'); const p=process.argv[1]; try { console.log(JSON.parse(fs.readFileSync(p,'utf8')).markdown || '') } catch { console.log('') }" "$report_dir/badge.json")"
 
         {
           echo "status-json=$report_dir/status.json"
           echo "task-pack=$task_pack"
           echo "public-bundle=$public_bundle_dir"
+          echo "badge-markdown=$badge_markdown"
         } >> "$GITHUB_OUTPUT"
 
         if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
@@ -120,6 +127,7 @@ runs:
             echo "| Gate | Exit code |"
             echo "| --- | ---: |"
             echo "| status | $status_code |"
+            echo "| badge | $badge_code |"
             echo "| drift | $drift_code |"
             echo "| privacy-audit | $privacy_code |"
             echo "| config-doctor | $config_code |"
@@ -130,12 +138,14 @@ runs:
             echo "| mcp-audit | $mcp_code |"
             echo "| publish-check | $publish_code |"
             echo
+            echo "$badge_markdown"
+            echo
             echo "Task pack: \`$task_pack\`"
             echo "Reports: \`$report_dir\`"
           } >> "$GITHUB_STEP_SUMMARY"
         fi
 
-        failure_codes=("$status_code" "$drift_code" "$privacy_code" "$publish_code" "$artifact_code" "$mcp_code" "$config_code" "$trace_code" "$pack_code" "$bundle_code")
+        failure_codes=("$status_code" "$badge_code" "$drift_code" "$privacy_code" "$publish_code" "$artifact_code" "$mcp_code" "$config_code" "$trace_code" "$pack_code" "$bundle_code")
 
         if [ "$fail_on" = "never" ]; then
           exit 0

@@ -25,6 +25,7 @@ From a source checkout today:
 ```bash
 npm run vibe -- doctor --workspace .
 npm run vibe -- status --workspace .
+npm run vibe -- badge --workspace .
 npm run vibe -- pack --workspace . --task "fix flaky tests"
 ```
 
@@ -91,6 +92,7 @@ The screenshot above uses the bundled public-safe demo workspace. It shows the c
 
 - Run as `npx vibe-context-os`, `vibe-context`, or `agent-context-doctor`.
 - Run in CI through the bundled GitHub Action.
+- Generate a README-ready `agent-ready` badge from local readiness checks.
 - Scan `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.cursor/rules`, Cline/Roo rules, Continue checks, GitHub instructions, docs, and project manifests.
 - Parse recent Codex JSONL sessions locally.
 - Classify work into context engineering, implementation, research, infra, docs, and automation tracks.
@@ -115,6 +117,8 @@ The screenshot above uses the bundled public-safe demo workspace. It shows the c
 - [中文说明](README.zh-CN.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Agent-native usage](docs/AGENT_NATIVE.md)
+- [Adoption playbook](docs/ADOPTION.md)
+- [Community research 2026-06-20](docs/COMMUNITY_RESEARCH_2026-06-20.md)
 - [Privacy model](docs/PRIVACY.md)
 - [Showcase guide](docs/SHOWCASE.md)
 - [Example outputs](docs/examples/README.md)
@@ -221,6 +225,7 @@ npm run vibe -- init
 npm run vibe -- doctor
 npm run vibe -- scan --workspace /path/to/project
 npm run vibe -- status --workspace /path/to/project
+npm run vibe -- badge --workspace /path/to/project
 npm run vibe -- drift
 npm run vibe -- budget
 npm run vibe -- publish-check
@@ -283,6 +288,7 @@ Examples:
 npm run vibe -- scan --json
 npm run vibe -- scan --workspace demo-workspace --json
 npm run vibe -- status --workspace demo-workspace --json
+npm run vibe -- badge --workspace demo-workspace --json
 npm run vibe -- demo --json
 npm run vibe -- apply-plan --json
 npm run vibe -- publish-check --json

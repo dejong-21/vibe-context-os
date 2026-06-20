@@ -12,6 +12,7 @@ type Command =
   | "scan"
   | "drift"
   | "budget"
+  | "badge"
   | "publish-check"
   | "privacy-audit"
   | "artifact-audit"
@@ -39,6 +40,7 @@ Usage:
   vibe scan                         Scan approved local context
   vibe drift                        Check stale or incomplete agent context
   vibe budget                       Estimate context size
+  vibe badge                        Print README-ready agent-readiness badge
   vibe pack --task "fix auth bug"   Build exports/latest/TASK_PACK.md
   vibe status                       Show scan, drift, publish, privacy summary
   vibe publish-check                Run release readiness checks
@@ -130,7 +132,8 @@ async function runtime() {
     artifactAudit,
     mcpAudit,
     configDoctor,
-    trace
+    trace,
+    badge
   ] = await Promise.all([
     import("./analyzer.js"),
     import("./exporter.js"),
@@ -147,7 +150,8 @@ async function runtime() {
     import("./artifactAudit.js"),
     import("./mcpAudit.js"),
     import("./configDoctor.js"),
-    import("./trace.js")
+    import("./trace.js"),
+    import("./badge.js")
   ]);
   return {
     analyze: analyzer.analyze,
@@ -177,7 +181,9 @@ async function runtime() {
     formatConfigDoctorReport: configDoctor.formatConfigDoctorReport,
     formatConfigFixPack: configDoctor.formatConfigFixPack,
     buildTraceReport: trace.buildTraceReport,
-    formatTraceReport: trace.formatTraceReport
+    formatTraceReport: trace.formatTraceReport,
+    buildBadgeReport: badge.buildBadgeReport,
+    formatBadgeReport: badge.formatBadgeReport
   };
 }
 
@@ -308,6 +314,14 @@ async function main() {
     const report = buildBudgetReport(analysis);
     if (json) printJson(report);
     else console.log(formatBudgetReport(report));
+    return;
+  }
+
+  if (command === "badge") {
+    const { buildStatusReport, buildBadgeReport, formatBadgeReport } = await runtime();
+    const report = buildBadgeReport(await buildStatusReport());
+    if (json) printJson(report);
+    else console.log(formatBadgeReport(report));
     return;
   }
 

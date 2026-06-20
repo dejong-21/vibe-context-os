@@ -6,6 +6,7 @@ Vibe Context OS is moving toward a small, agent-native doctor for AI coding work
 
 - Publish an npm package with `npx vibe-context-os doctor`.
 - Ship the reusable GitHub Action in `action.yml`.
+- Ship README-ready readiness badges through `vibe-context-os badge`.
 - Keep the Web console as an optional inspection surface, not the primary workflow.
 - Keep public-safe demo outputs in `docs/examples`.
 - Add short terminal demos for `doctor`, `pack`, and `publish-check`.

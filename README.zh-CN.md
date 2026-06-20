@@ -25,6 +25,7 @@ npx vibe-context-os pack --workspace . --task "fix flaky tests"
 ```bash
 npm run vibe -- doctor --workspace .
 npm run vibe -- status --workspace .
+npm run vibe -- badge --workspace .
 npm run vibe -- pack --workspace . --task "fix flaky tests"
 ```
 
@@ -84,6 +85,7 @@ Vibe Coding Context OS 做的事情是把这些上下文变成一个可检查、
 
 - 支持 `npx vibe-context-os`、`vibe-context` 和 `agent-context-doctor` 三个 CLI 入口。
 - 支持作为 GitHub Action 在 CI 中检查 agent readiness。
+- 根据本地 readiness 检查生成可放进 README 的 `agent-ready` badge。
 - 扫描项目规则、文档、代码、manifest、GitHub/Cursor/Claude/Gemini/Cline/Continue 配置。
 - 可选读取本地 Codex 会话摘要，但默认不导出原始会话文本。
 - 生成面向 Codex、Claude Code、Cursor、Gemini CLI、Cline/Roo、Continue、GitHub Copilot 和 MCP 的规则文件。
@@ -153,6 +155,8 @@ npm run agent:install -- --claude-project "你的项目路径"
 
 - [架构说明](docs/ARCHITECTURE.md)
 - [Agent 原生用法](docs/AGENT_NATIVE.md)
+- [采用指南](docs/ADOPTION.md)
+- [社区调研 2026-06-20](docs/COMMUNITY_RESEARCH_2026-06-20.md)
 - [隐私模型](docs/PRIVACY.md)
 - [展示指南](docs/SHOWCASE.md)
 - [路线图](ROADMAP.md)
@@ -164,6 +168,7 @@ npm run agent:install -- --claude-project "你的项目路径"
 ```bash
 npm run vibe -- scan
 npm run vibe -- status
+npm run vibe -- badge
 npm run vibe -- drift
 npm run vibe -- budget
 npm run vibe -- pack --task "prepare this repository for public release"

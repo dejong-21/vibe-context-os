@@ -114,6 +114,12 @@ try {
     assert(status.privacy?.status === "pass", "Installed CLI status should include privacy pass.");
     assert(typeof status.publish?.status === "string", "Installed CLI status should include publish status.");
 
+    const badgeText = await run(process.execPath, [cliEntry, "badge", "--workspace", demoRoot, "--json"], { cwd: tempRoot, env: process.env });
+    const badge = JSON.parse(badgeText) as { status?: string; markdown?: string; url?: string };
+    assert(typeof badge.status === "string", "Installed CLI badge should include readiness status.");
+    assert(badge.markdown?.includes("img.shields.io"), "Installed CLI badge should include shields.io markdown.");
+    assert(badge.url?.includes("img.shields.io"), "Installed CLI badge should include badge URL.");
+
     const traceText = await run(process.execPath, [cliEntry, "trace", "--workspace", demoRoot, "--json"], { cwd: tempRoot, env: process.env });
     const trace = JSON.parse(traceText) as { status?: string; totals?: { sessions?: number } };
     assert(typeof trace.status === "string", "Installed CLI trace should include a status.");
@@ -236,6 +242,7 @@ console.log(
         "cli-scan",
         "workspace-flag",
         "status",
+        "badge",
         "trace",
         "config-doctor",
         "config-fix-pack",
