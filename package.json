@@ -2,7 +2,7 @@
   "name": "vibe-context-os",
   "version": "0.1.0",
   "type": "module",
-  "description": "Local-first context engineering OS for AI coding workflows.",
+  "description": "Agent Context Doctor for AI coding workflows.",
   "license": "MIT",
   "author": "dejong-21",
   "repository": {
@@ -14,21 +14,29 @@
   },
   "homepage": "https://github.com/dejong-21/vibe-context-os#readme",
   "keywords": [
+    "agent-context",
+    "agent-rules",
+    "agents-md",
     "ai-coding",
     "context-engineering",
     "codex",
     "claude-code",
     "cursor",
+    "developer-tools",
     "mcp",
+    "mcp-security",
     "vibe-coding"
   ],
   "engines": {
     "node": ">=22"
   },
   "bin": {
-    "vibe-context": "./dist-server/server/cli.js"
+    "vibe-context": "./dist-server/server/cli.js",
+    "vibe-context-os": "./dist-server/server/cli.js",
+    "agent-context-doctor": "./dist-server/server/cli.js"
   },
   "files": [
+    "action.yml",
     "dist",
     "dist-server/server/analyzer.*",
     "dist-server/server/artifactAudit.*",
@@ -62,6 +70,7 @@
     ".env.example",
     "README.md",
     "README.zh-CN.md",
+    "ROADMAP.md",
     "CHANGELOG.md",
     "CODE_OF_CONDUCT.md",
     "CONTRIBUTING.md",

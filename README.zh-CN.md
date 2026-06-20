@@ -1,8 +1,67 @@
 # Vibe Coding Context OS
 
-一个本地优先的 AI 编程上下文操作系统。它会扫描项目规则、文档、代码、可选的 Codex 会话摘要和仓库信号，然后生成可复用的任务上下文包、智能体规则、隐私检查、MCP 工具和适合公开展示的 GitHub 作品集材料。
+面向 AI 编程工作流的 Agent Context Doctor。
+
+它会诊断并生成 `AGENTS.md`、Claude Code skill、Cursor rules、MCP 安全策略、任务上下文包和公开安全的发布报告，适合已经在使用 Codex、Claude Code、Cursor、Gemini CLI、Cline/Roo、Continue、Aider 或 MCP 客户端的项目。
+
+[![CI](https://github.com/dejong-21/vibe-context-os/actions/workflows/ci.yml/badge.svg)](https://github.com/dejong-21/vibe-context-os/actions/workflows/ci.yml)
+![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 [English README](README.md)
+
+## 一分钟开始
+
+npm 包发布后，可以在任意仓库中把它当成 CLI doctor 使用：
+
+```bash
+npx vibe-context-os doctor
+npx vibe-context-os status --workspace .
+npx vibe-context-os pack --workspace . --task "fix flaky tests"
+```
+
+当前源码 checkout 中可以这样运行：
+
+```bash
+npm run vibe -- doctor --workspace .
+npm run vibe -- status --workspace .
+npm run vibe -- pack --workspace . --task "fix flaky tests"
+```
+
+公开分享之前跑发布门禁：
+
+```bash
+npx vibe-context-os privacy-audit --workspace .
+npx vibe-context-os publish-check --workspace .
+npx vibe-context-os public-bundle --workspace .
+```
+
+在 GitHub Actions 里使用：
+
+```yaml
+name: Agent context
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dejong-21/vibe-context-os@main
+        with:
+          task: "review this pull request for AI coding agent readiness"
+          fail-on: block
+```
+
+在 agent 里直接说：
+
+```text
+Use Vibe Context OS to preflight this repository before editing.
+Use Vibe Context OS to generate a task pack for this task, then follow it.
+```
 
 ## 它解决什么问题
 
@@ -23,16 +82,18 @@ Vibe Coding Context OS 做的事情是把这些上下文变成一个可检查、
 
 ## 核心能力
 
+- 支持 `npx vibe-context-os`、`vibe-context` 和 `agent-context-doctor` 三个 CLI 入口。
+- 支持作为 GitHub Action 在 CI 中检查 agent readiness。
 - 扫描项目规则、文档、代码、manifest、GitHub/Cursor/Claude/Gemini/Cline/Continue 配置。
 - 可选读取本地 Codex 会话摘要，但默认不导出原始会话文本。
 - 生成面向 Codex、Claude Code、Cursor、Gemini CLI、Cline/Roo、Continue、GitHub Copilot 和 MCP 的规则文件。
 - 生成任务上下文包 `TASK_PACK.md`，让 AI 编程工具拿到更紧凑的任务交接。
 - 检查上下文漂移、隐私风险、MCP 配置风险、跨工具配置覆盖率和发布准备状态。
 - 生成公开安全包，适合 GitHub README、个人主页、简历项目说明和演示截图。
-- 提供 CLI、Web inspection console、本地 MCP stdio server 三种入口。
+- 提供 CLI、Codex/Claude skill、GitHub Action、Web inspection console、本地 MCP stdio server 多种入口。
 - Web 控制台支持英文/中文切换，CLI、MCP 和生成报告保持稳定英文，方便自动化和 GitHub 审查。
 
-## 快速开始
+## 本地开发
 
 要求 Node.js 22 或更新版本。
 
@@ -43,7 +104,18 @@ npm run dev
 
 打开 `http://127.0.0.1:5173`。
 
-后端 API 默认运行在 `http://127.0.0.1:8787`。如果你只是想安全体验产品，可以先扫描内置的公开 demo workspace：
+后端 API 默认运行在 `http://127.0.0.1:8787`。
+
+## 公开安全 Demo
+
+如果你不想扫描私人文件，可以直接跑内置 demo：
+
+```bash
+npx vibe-context-os demo
+npx vibe-context-os demo --public-bundle
+```
+
+源码开发时也可以用 npm scripts：
 
 ```bash
 npm run vibe -- demo
@@ -83,6 +155,7 @@ npm run agent:install -- --claude-project "你的项目路径"
 - [Agent 原生用法](docs/AGENT_NATIVE.md)
 - [隐私模型](docs/PRIVACY.md)
 - [展示指南](docs/SHOWCASE.md)
+- [路线图](ROADMAP.md)
 - [FAQ](docs/FAQ.md)
 - [发布清单](docs/RELEASE.md)
 

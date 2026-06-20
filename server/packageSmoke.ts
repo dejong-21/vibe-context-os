@@ -76,8 +76,11 @@ try {
     const installCommand = npmCommand(["install", "--ignore-scripts", "--no-audit", "--no-fund", tarball]);
     await run(installCommand.command, installCommand.args, { cwd: tempRoot });
 
-    const bin = path.join(tempRoot, "node_modules", ".bin", process.platform === "win32" ? "vibe-context.cmd" : "vibe-context");
-    await fs.access(bin);
+    const binNames = ["vibe-context", "vibe-context-os", "agent-context-doctor"];
+    for (const name of binNames) {
+      const bin = path.join(tempRoot, "node_modules", ".bin", process.platform === "win32" ? `${name}.cmd` : name);
+      await fs.access(bin);
+    }
     const cliEntry = path.join(tempRoot, "node_modules", "vibe-context-os", "dist-server", "server", "cli.js");
     await fs.access(cliEntry);
     const env = {

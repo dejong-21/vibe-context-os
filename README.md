@@ -1,14 +1,73 @@
 # Vibe Coding Context OS
 
-Local-first context engineering OS for AI coding workflows. It scans project rules, Codex sessions, and repository signals, then turns them into a reusable context map, generated agent rules, guardrails, and GitHub-ready portfolio material.
+Agent Context Doctor for AI coding workflows.
+
+Diagnose and generate `AGENTS.md`, Claude Code skills, Cursor rules, MCP safety policy, task context packs, and public-safe release reports for repositories that use Codex, Claude Code, Cursor, Gemini CLI, Cline/Roo, Continue, Aider, or MCP clients.
+
+[![CI](https://github.com/dejong-21/vibe-context-os/actions/workflows/ci.yml/badge.svg)](https://github.com/dejong-21/vibe-context-os/actions/workflows/ci.yml)
+![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 [中文说明](README.zh-CN.md)
+
+## One-minute start
+
+After the npm package is published, use it as a CLI doctor in any repository:
+
+```bash
+npx vibe-context-os doctor
+npx vibe-context-os status --workspace .
+npx vibe-context-os pack --workspace . --task "fix flaky tests"
+```
+
+From a source checkout today:
+
+```bash
+npm run vibe -- doctor --workspace .
+npm run vibe -- status --workspace .
+npm run vibe -- pack --workspace . --task "fix flaky tests"
+```
+
+Before sharing generated context or project material publicly:
+
+```bash
+npx vibe-context-os privacy-audit --workspace .
+npx vibe-context-os publish-check --workspace .
+npx vibe-context-os public-bundle --workspace .
+```
+
+Use it in GitHub Actions:
+
+```yaml
+name: Agent context
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dejong-21/vibe-context-os@main
+        with:
+          task: "review this pull request for AI coding agent readiness"
+          fail-on: block
+```
+
+Use it from an agent:
+
+```text
+Use Vibe Context OS to preflight this repository before editing.
+Use Vibe Context OS to generate a task pack for this task, then follow it.
+```
 
 ## Why this exists
 
 AI coding gets powerful when the context is organized. Most developers lose value because rules live in scattered files, sessions vanish after the task, and good prompts never become reusable process. Vibe Coding Context OS turns that messy work into durable engineering assets.
 
-The primary interface is agent-native: use the bundled skill, CLI, MCP server, or Claude Code command templates from inside Codex, Claude Code, Cursor, Gemini CLI, Aider, Cline, or a normal terminal. The web app is the inspection console for scans, privacy posture, and generated artifacts.
+The primary interface is agent-native: use the bundled skill, CLI, MCP server, GitHub Action, or Claude Code command templates from inside Codex, Claude Code, Cursor, Gemini CLI, Aider, Cline, or a normal terminal. The web app is an optional inspection console for scans, privacy posture, and generated artifacts.
 
 ## Who it is for
 
@@ -30,6 +89,8 @@ The screenshot above uses the bundled public-safe demo workspace. It shows the c
 
 ## Features
 
+- Run as `npx vibe-context-os`, `vibe-context`, or `agent-context-doctor`.
+- Run in CI through the bundled GitHub Action.
 - Scan `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.cursor/rules`, Cline/Roo rules, Continue checks, GitHub instructions, docs, and project manifests.
 - Parse recent Codex JSONL sessions locally.
 - Classify work into context engineering, implementation, research, infra, docs, and automation tracks.
@@ -57,6 +118,7 @@ The screenshot above uses the bundled public-safe demo workspace. It shows the c
 - [Privacy model](docs/PRIVACY.md)
 - [Showcase guide](docs/SHOWCASE.md)
 - [Example outputs](docs/examples/README.md)
+- [Roadmap](ROADMAP.md)
 - [FAQ](docs/FAQ.md)
 - [Release checklist](docs/RELEASE.md)
 - [Contributing](CONTRIBUTING.md)
@@ -81,7 +143,7 @@ flowchart LR
 
 The important boundary is simple: scan and summarize locally, generate reviewable artifacts, then publish only public-safe outputs.
 
-## Quick start
+## Local development
 
 Prerequisites:
 
@@ -102,19 +164,21 @@ After the first scan, the Overview page should show source counts, privacy statu
 By default, Vibe scans the directory where you run the command. Use `--workspace /path/to/project` or set `WORKSPACE_ROOT` when you want to inspect a different workspace.
 Codex home session scanning is opt-in through `.vibe/config.json` with `"includeCodexSessions": true`.
 
-## One-minute demo
+## Public-safe demo
 
 Use the included clean demo workspace when you want to try the product without scanning private local files:
 
 ```bash
-npm run vibe -- demo
-npm run vibe -- demo --public-bundle
-npm run vibe -- demo --privacy-audit
+npx vibe-context-os demo
+npx vibe-context-os demo --public-bundle
 ```
 
 During source development, the npm script aliases are also available:
 
 ```bash
+npm run vibe -- demo
+npm run vibe -- demo --public-bundle
+npm run vibe -- demo --privacy-audit
 npm run demo:scan
 npm run demo:export
 npm run demo:public-bundle

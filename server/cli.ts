@@ -54,7 +54,7 @@ Usage:
   vibe release-plan                 Print release checklist
   vibe demo                         Scan the bundled public-safe demo workspace
   vibe mcp                          Start stdio MCP server
-  vibe doctor                       Print current configuration
+  vibe doctor                       Run quick agent-context diagnosis
   vibe version                      Print package version
 
 Recommended loops:
@@ -242,22 +242,10 @@ async function main() {
   }
 
   if (command === "doctor") {
-    const { config } = await runtime();
-    const payload = {
-      workspaceRoot: config.workspaceRoot,
-      codexHome: config.codexHome,
-      lookbackDays: config.lookbackDays,
-      exportRoot: config.exportRoot,
-      port: config.port
-    };
-    if (json) {
-      printJson(payload);
-      return;
-    }
-    console.log("Workspace root:", config.workspaceRoot);
-    console.log("Codex home:", config.codexHome);
-    console.log("Lookback days:", config.lookbackDays);
-    console.log("Export root:", config.exportRoot);
+    const { buildStatusReport, formatStatusReport } = await runtime();
+    const report = await buildStatusReport();
+    if (json) printJson(report);
+    else console.log(formatStatusReport(report));
     return;
   }
 

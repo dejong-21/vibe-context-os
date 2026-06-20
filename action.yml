@@ -1,0 +1,151 @@
+name: Vibe Context OS
+description: Diagnose AI coding agent context, safety gates, and task packs for a repository.
+author: dejong-21
+
+branding:
+  icon: check-circle
+  color: blue
+
+inputs:
+  workspace:
+    description: Repository workspace to inspect. Defaults to the checked-out GitHub workspace.
+    required: false
+    default: ""
+  task:
+    description: Task text used to generate exports/latest/TASK_PACK.md.
+    required: false
+    default: "review this repository for AI coding agent readiness"
+  fail-on:
+    description: "Failure policy: block, warning, or never."
+    required: false
+    default: block
+  public-bundle:
+    description: Generate exports/public for public-safe README or portfolio material.
+    required: false
+    default: "true"
+
+outputs:
+  status-json:
+    description: Path to the generated status JSON report.
+    value: ${{ steps.doctor.outputs.status-json }}
+  task-pack:
+    description: Path to the generated task pack.
+    value: ${{ steps.doctor.outputs.task-pack }}
+  public-bundle:
+    description: Path to the generated public bundle directory, when enabled.
+    value: ${{ steps.doctor.outputs.public-bundle }}
+
+runs:
+  using: composite
+  steps:
+    - name: Build Vibe Context OS
+      shell: bash
+      run: |
+        set -euo pipefail
+        cd "$GITHUB_ACTION_PATH"
+        npm ci
+        npm run build
+
+    - name: Diagnose agent context
+      id: doctor
+      shell: bash
+      env:
+        INPUT_WORKSPACE: ${{ inputs.workspace }}
+        INPUT_TASK: ${{ inputs.task }}
+        INPUT_FAIL_ON: ${{ inputs.fail-on }}
+        INPUT_PUBLIC_BUNDLE: ${{ inputs.public-bundle }}
+      run: |
+        set -u
+
+        workspace="${INPUT_WORKSPACE:-$GITHUB_WORKSPACE}"
+        task="${INPUT_TASK:-review this repository for AI coding agent readiness}"
+        fail_on="${INPUT_FAIL_ON:-block}"
+        public_bundle="${INPUT_PUBLIC_BUNDLE:-true}"
+        cli="$GITHUB_ACTION_PATH/dist-server/server/cli.js"
+        report_dir="$RUNNER_TEMP/vibe-context-os"
+
+        mkdir -p "$report_dir"
+        cd "$workspace"
+
+        run_json() {
+          local command="$1"
+          local output="$2"
+          shift 2
+          set +e
+          node "$cli" "$command" --workspace "$workspace" --json "$@" > "$output"
+          local code=$?
+          set -e
+          return "$code"
+        }
+
+        status_code=0
+        drift_code=0
+        privacy_code=0
+        publish_code=0
+        artifact_code=0
+        mcp_code=0
+        config_code=0
+        trace_code=0
+        pack_code=0
+        bundle_code=0
+
+        run_json status "$report_dir/status.json" || status_code=$?
+        run_json drift "$report_dir/drift.json" || drift_code=$?
+        run_json privacy-audit "$report_dir/privacy-audit.json" || privacy_code=$?
+        run_json config-doctor "$report_dir/config-doctor.json" || config_code=$?
+        run_json trace "$report_dir/trace.json" || trace_code=$?
+        run_json pack "$report_dir/pack.json" --task "$task" || pack_code=$?
+
+        if [ "$public_bundle" = "true" ]; then
+          run_json public-bundle "$report_dir/public-bundle.json" || bundle_code=$?
+        fi
+
+        run_json artifact-audit "$report_dir/artifact-audit.json" || artifact_code=$?
+        run_json mcp-audit "$report_dir/mcp-audit.json" || mcp_code=$?
+        run_json publish-check "$report_dir/publish-check.json" || publish_code=$?
+
+        task_pack="$workspace/exports/latest/TASK_PACK.md"
+        public_bundle_dir="$workspace/exports/public"
+
+        {
+          echo "status-json=$report_dir/status.json"
+          echo "task-pack=$task_pack"
+          echo "public-bundle=$public_bundle_dir"
+        } >> "$GITHUB_OUTPUT"
+
+        if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+          {
+            echo "## Vibe Context OS"
+            echo
+            echo "| Gate | Exit code |"
+            echo "| --- | ---: |"
+            echo "| status | $status_code |"
+            echo "| drift | $drift_code |"
+            echo "| privacy-audit | $privacy_code |"
+            echo "| config-doctor | $config_code |"
+            echo "| trace | $trace_code |"
+            echo "| pack | $pack_code |"
+            echo "| public-bundle | $bundle_code |"
+            echo "| artifact-audit | $artifact_code |"
+            echo "| mcp-audit | $mcp_code |"
+            echo "| publish-check | $publish_code |"
+            echo
+            echo "Task pack: \`$task_pack\`"
+            echo "Reports: \`$report_dir\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+        failure_codes=("$status_code" "$drift_code" "$privacy_code" "$publish_code" "$artifact_code" "$mcp_code" "$config_code" "$trace_code" "$pack_code" "$bundle_code")
+
+        if [ "$fail_on" = "never" ]; then
+          exit 0
+        fi
+
+        for code in "${failure_codes[@]}"; do
+          if [ "$code" -ne 0 ]; then
+            if [ "$fail_on" = "warning" ]; then
+              echo "Vibe Context OS found review findings. Set fail-on: never to make this informational."
+            fi
+            exit "$code"
+          fi
+        done
